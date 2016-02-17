@@ -94,7 +94,7 @@ object Pack
 	  """.stripMargin)
   val packDocsDir = settingKey[String]("pack directory name for javadocs")
   val packDocsUpdateReports = taskKey[Seq[(File, ProjectRef)]]("only for retrieving dependent module names")
-
+  val packCopyDocs  = taskKey[Unit]("copy distributable javadoc packages of the project")
 
 
   import complete.DefaultParsers._
@@ -530,7 +530,28 @@ object Pack
       libs.foreach(l ⇒ IO.copyFile(l, packCopyDependenciesTarget.value / l.getName))
 
       log info s"Copied ${distinctDpJars.size+libs.size} jars to ${packCopyDependenciesTarget.value}"
-    }
+    },
+
+    packCopyDocs := {
+          val log = streams.value.log
+          val packRoot=packTargetDir.value / packDir.value
+          val docDir=packRoot / packDocsDir.value
+
+
+      val dependentJars =packDocsUpdateReports.value.map(_._1)
+
+      log.debug(s"""dep jars are ${dependentJars.mkString("\n")}""")
+
+      IO.delete(docDir)
+
+      packRoot.mkdirs()
+      docDir.mkdirs()
+
+      log.info(s"copying javadocs to $docDir")
+
+      dependentJars.foreach(d => IO.copyFile(d,docDir / d.getName))
+
+  }
   ) ++ packArchiveSettings
 
   lazy val packAutoSettings = packSettings :+ (
