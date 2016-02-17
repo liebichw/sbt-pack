@@ -548,7 +548,7 @@ object Pack
           p.uses
       }
 
-      (currentProject +: (children flatMap (allProjectRefs(_)))) filterNot (isExcluded)
+      (currentProject +: (children flatMap allProjectRefs)) filterNot isExcluded
     }
 
     val projects: Seq[ProjectRef] = allProjectRefs(currentProject).distinct
