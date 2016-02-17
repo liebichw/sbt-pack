@@ -207,7 +207,7 @@ object Pack
               .flatMap {
         case (key, entries) if entries.groupBy(_._1.revision).size == 1 => entries
         case (key, entries) =>
-          val revisions = entries.groupBy(_._1.revision).map(_._1).toList.sorted
+          val revisions = entries.groupBy(_._1.revision).keys.toList.sorted
           val latestRevision = revisions.last
           packDuplicateJarStrategy.value match {
             case "latest" =>
@@ -395,7 +395,7 @@ object Pack
               val e0 = entries(0)
               (modID(e0._1), e0._2)
             case (key, entries) ⇒
-              val revisions = entries.groupBy(_._1.revision).map(_._1).toList.sorted
+              val revisions = entries.groupBy(_._1.revision).keys.toList.sorted
               val latestRevision = revisions.last
               packDuplicateJarStrategy.value match {
                 case "latest" =>
@@ -442,7 +442,7 @@ object Pack
           (mod1, mod2, file1)
       }
 
-      if (conflicts.size > 0) {
+      if (conflicts.nonEmpty) {
         val groupedConflicts = conflicts.groupBy { case (mod1, mod2, file) ⇒
           (mod1, mod2)
         }.mapValues { _.map{ case (mod1, mod2, file) ⇒ file } }
