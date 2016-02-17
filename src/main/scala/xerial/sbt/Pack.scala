@@ -93,6 +93,9 @@ object Pack
 		|The use of symbolic links allows faster processing and save disk space.
 	  """.stripMargin)
 
+  val packDocsDir = settingKey[String]("pack directory name for javadocs")
+
+
   import complete.DefaultParsers._
 
   private val targetFolderParser: complete.Parser[Option[String]] =
@@ -101,6 +104,7 @@ object Pack
   lazy val packSettings = Seq[Def.Setting[_]](
     packTargetDir := target.value,
     packDir := "pack",
+    packDocsDir := "docs",
     packBashTemplate := "/xerial/sbt/template/launch.mustache",
     packBatTemplate := "/xerial/sbt/template/launch-bat.mustache",
     packMakeTemplate := "/xerial/sbt/template/Makefile.mustache",
