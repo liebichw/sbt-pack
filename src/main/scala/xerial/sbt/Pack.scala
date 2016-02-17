@@ -92,8 +92,9 @@ object Pack
 	  """use symbolic links instead of copying for <packCopyDependencies>.
 		|The use of symbolic links allows faster processing and save disk space.
 	  """.stripMargin)
-
   val packDocsDir = settingKey[String]("pack directory name for javadocs")
+  val packDocsUpdateReports = taskKey[Seq[(File, ProjectRef)]]("only for retrieving dependent module names")
+
 
 
   import complete.DefaultParsers._
@@ -146,6 +147,7 @@ object Pack
     packAllUnmanagedJars <<= (thisProjectRef, buildStructure, packExclude) flatMap getFromSelectedProjects(unmanagedJars in Runtime),
     packLibJars <<= (thisProjectRef, buildStructure, packExcludeLibJars) flatMap getFromSelectedProjects(packageBin in Runtime),
     packUpdateReports <<= (thisProjectRef, buildStructure, packExclude) flatMap getFromSelectedProjects(update),
+    packDocsUpdateReports <<= (thisProjectRef, buildStructure,packExclude) flatMap getFromSelectedProjects(packageDoc,Some(Compile)),
     packJarNameConvention := "default",
     packDuplicateJarStrategy := "latest",
     packGenerateWindowsBatFile := true,
