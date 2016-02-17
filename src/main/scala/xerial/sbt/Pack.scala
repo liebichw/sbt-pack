@@ -535,8 +535,8 @@ object Pack
           packMain := packMainDiscovered.value
           )
 
-  private def getFromAllProjects[T](targetTask: TaskKey[T])(currentProject: ProjectRef, structure: BuildStructure): Task[Seq[(T, ProjectRef)]] =
-    getFromSelectedProjects(targetTask)(currentProject, structure, Seq.empty)
+  private def getFromAllProjects[T](targetTask: TaskKey[T],config:Option[Configuration]=None)(currentProject: ProjectRef, structure: BuildStructure): Task[Seq[(T, ProjectRef)]] =
+    getFromSelectedProjects(targetTask,config)(currentProject, structure, Seq.empty)
 
   private def getFromSelectedProjects[T](targetTask: TaskKey[T],config:Option[Configuration]=None)(currentProject: ProjectRef, structure: BuildStructure, exclude: Seq[String]): Task[Seq[(T, ProjectRef)]] =
   {
