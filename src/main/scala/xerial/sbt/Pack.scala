@@ -538,7 +538,7 @@ object Pack
   private def getFromAllProjects[T](targetTask: TaskKey[T])(currentProject: ProjectRef, structure: BuildStructure): Task[Seq[(T, ProjectRef)]] =
     getFromSelectedProjects(targetTask)(currentProject, structure, Seq.empty)
 
-  private def getFromSelectedProjects[T](targetTask: TaskKey[T])(currentProject: ProjectRef, structure: BuildStructure, exclude: Seq[String]): Task[Seq[(T, ProjectRef)]] =
+  private def getFromSelectedProjects[T](targetTask: TaskKey[T],config:Option[Configuration]=None)(currentProject: ProjectRef, structure: BuildStructure, exclude: Seq[String]): Task[Seq[(T, ProjectRef)]] =
   {
     def allProjectRefs(currentProject: ProjectRef): Seq[ProjectRef] =
     {
@@ -552,8 +552,9 @@ object Pack
     }
 
     val projects: Seq[ProjectRef] = allProjectRefs(currentProject).distinct
-    projects.map(p => (Def.task {
-      ((targetTask in p).value, p)
-    }) evaluate structure.data).join
+    projects.map(p => config match {
+      case Some(conf:Configuration) => (Def.task {((targetTask in conf in p).value, p)}) evaluate structure.data
+      case None => (Def.task {((targetTask in p).value, p)}) evaluate structure.data
+    }).join
   }
 }
