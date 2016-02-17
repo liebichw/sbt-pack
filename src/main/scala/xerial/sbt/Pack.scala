@@ -499,7 +499,7 @@ object Pack
               val e0 = entries(0)
               e0._2
             case (key, entries) ⇒
-              val revisions = entries.groupBy(_._1.revision).map(_._1).toList.sorted
+              val revisions = entries.groupBy(_._1.revision).keys.toList.sorted
               val latestRevision = revisions.last
               packDuplicateJarStrategy.value match {
                 case "latest" =>
