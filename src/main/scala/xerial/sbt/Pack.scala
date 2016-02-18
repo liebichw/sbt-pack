@@ -527,7 +527,7 @@ object Pack
           IO.copyFile(d, dest)
       }
       val libs = packLibJars.value.map(_._1)
-      libs.foreach(l ⇒ IO.copyFile(l, packCopyDependenciesTarget.value / l.getName))
+      libs.foreach(l => IO.copyFile(l, packCopyDependenciesTarget.value / l.getName))
 
       log info s"Copied ${distinctDpJars.size+libs.size} jars to ${packCopyDependenciesTarget.value}"
     },
